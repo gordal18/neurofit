@@ -1,0 +1,17 @@
+{% extends "cnmb/base.html" %}
+
+{% block title %}Start New - {% endblock %}
+
+{% block body %}
+
+<h1>Start CNMB Administration</h1>
+
+<form method="post" action="">
+{% csrf_token %}
+<table class="form">
+{{ form }}
+<tr class="form_footer"><td colspan="2"><input type="submit" value="Start CNMB"></td></tr>
+</table>
+</form>
+
+{% endblock %}

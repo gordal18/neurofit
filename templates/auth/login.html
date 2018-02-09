@@ -1,0 +1,24 @@
+{% extends "cnmb/base.html" %}
+
+{% block body %}
+
+{% if next %}
+    {% if user.is_authenticated %}
+    <p>Your account doesn't have access to this page.</p>
+    {% else %}
+    <p>Please login to see this page.</p>
+    {% endif %}
+{% endif %}
+
+<form method="post" action="{% url 'login' %}">
+{% csrf_token %}
+<table class="form">
+{{ form }}
+<tr class="form_footer"><td colspan="2"><input type="submit" value="Login"></td></tr>
+</table>
+<input type="hidden" name="next" value="{{ next }}">
+</form>
+
+<p><a href="{% url 'password_reset' %}">Forgot password?</a></p>
+
+{% endblock %}

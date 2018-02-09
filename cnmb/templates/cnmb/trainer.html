@@ -1,0 +1,30 @@
+{% extends "cnmb/base.html" %}
+{% load cnmb_extras %}
+{% block title %}{{ page_user|user_nice }} - {% endblock %}
+
+{% block body %}
+
+<h1>Trainer</h1>
+
+<table class="form">
+<tr><th>Name</th><td>{{ page_user|user_nice }}</td></tr>
+<tr><th>Email</th><td>{{ page_user.email }}</td></tr>
+</table>
+
+<br>
+
+<h2>All Administrations:</h2>
+{% if administrations %}
+<table class="grid">
+<tr class="headfoot">{#<th></th>#}<th>Date</th><th>Client</th></tr>
+{% for a in administrations %}
+    {#<tr><td><a href="{% url 'cnmb:admin' a.id %}">View</a></td>#}
+    <td><a href="{% url 'cnmb:admin' a.id %}">{{ a.date_given }}</a></td>
+    <td><a href="{% url 'cnmb:client' a.client.id %}">{{ a.client }}</a></td></tr>
+{% endfor %}
+</table>
+{% else %}
+<p>This trainer has not administered any CNMBs yet.</p>
+{% endif %}
+
+{% endblock %}

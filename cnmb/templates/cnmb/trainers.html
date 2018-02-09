@@ -1,0 +1,26 @@
+{% extends "cnmb/base.html" %}
+{% load cnmb_extras %}
+{% block title %}Trainers - {% endblock %}
+
+{% block body %}
+
+<h1>Trainers</h1>
+
+{% for l in locations %}
+	<h2>{{ l.name }}</h2>
+	<ul>
+	{% for u in l.users %}
+	<li><a href="{% url 'cnmb:trainer' u.username %}">{{ u|user_nice }}</a></li>
+	{% endfor %}
+	</ul>
+{% endfor %}
+
+{% comment %}
+<ul>
+{% for u in users %}
+<li><a href="{% url 'cnmb:trainer' u.username %}">{{ u|user_nice }}</a></li>
+{% endfor %}
+</ul>
+{% endcomment %}
+
+{% endblock %}

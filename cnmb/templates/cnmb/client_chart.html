@@ -1,0 +1,80 @@
+{% extends "cnmb/base.html" %}
+
+{% block title %}Client: {{ client }} - {% endblock %}
+
+{% block body %}
+<p><a href="{% url 'cnmb:client' client.id %}">&lt; Back to Client Info</a></p>
+<h2>Client: {{ client }}</h2>
+<div id="chart1"></div>
+<ol>
+{% for section in sections %}
+<li>{{ section.title }}</li>
+{% endfor %}
+</ol>
+<div>{{ contentA|safe }}</div>
+{% endblock %}
+
+{% block head %}
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+google.load('visualization', '1', {packages:['corechart']});
+google.setOnLoadCallback(drawCharts);
+function drawCharts() {
+
+var rawData = [
+{% for a in administrations %}
+	{label: '{{a.date_given|date:"M j"}}', scores: [
+{% for pair in a.section_scores %}
+		{ score: {{pair.0}}, max: {{pair.1}} },
+{% endfor %}
+	]},
+{% endfor %}
+];
+
+var data = new google.visualization.DataTable();
+data.addColumn('string', 'Section');
+var nSections = 0;
+for (var i = 0; i < rawData.length; i++) {
+	data.addColumn('number', rawData[i].label);
+	data.addColumn({type:'string', role:'annotation'});
+	nSections = Math.max(nSections, rawData[i].scores.length);
+}
+for (var si = 0; si < nSections; si++) {
+	var row = ['Section ' + (si+1)];
+	for (var i = 0; i < rawData.length; i++) {
+		var p = rawData[i].scores[si] || {score:0, max:1};
+		var v = p.score / p.max;
+		var f = p.score + ' (' + Math.round(v*100) + '%)';
+		row.push({v: v, f: f});
+		row.push(String(p.score));
+	}
+	data.addRow(row);
+}
+var row = ['TOTAL'];
+for (var i = 0; i < rawData.length; i++) {
+	var scores = rawData[i].scores;
+	var total = 0, max = 0;
+	for (var si = 0; si < scores.length; si++) {
+		total += scores[si].score;
+		max += scores[si].max;
+	}
+	var v = total / max;
+	var f = total + ' (' + Math.round(v*100) + '%)';
+	row.push({v: v, f: f});
+	row.push(String(total));
+}
+data.addRow(row);
+
+var options = {
+	width: 800,
+	height: 400,
+	chartArea: {left:50, width:'100%'},
+	legend: {position:'top'},
+	vAxis: {minValue:0, maxValue:1, format:'percent'},
+	colors: ['#1e3e88', '#ef3824', '#f37321', '#4c8a34', '#3dbce6', '#faa41a', '#91b63d'],
+};
+var chart = new google.visualization.ColumnChart(document.getElementById('chart1'));
+chart.draw(data, options);
+}
+</script>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "cnmb/base.html" %}
+{% load cnmb_extras %}
+
+{% block title %}Client: {{ client.first_name }} {{ client.last_name }} - {% endblock %}
+
+{% block body %}
+
+{% if user|is_trainer %}
+<h1>Client</h1>
+<form method="post" action="">
+{% csrf_token %}
+<table class="form">
+<tr><th>First Name:</th><td>{{ client.first_name }}</td></tr>
+<tr><th>Last Name:</th><td>{{ client.last_name }}</td></tr>
+<tr><th>Gender:</th><td>{{ client.gender }}</td></tr>
+<tr><th>Birthday:</th><td>{{ client.birthday|default:"" }}</td></tr>
+<tr><th>Parent:</th><td>{{ client.parent }}</td></tr>
+<tr><th>Email:</th><td>{{ client.email }}</td></tr>
+<tr><th>Phone:</th><td>{{ client.phone }}</td></tr>
+<tr><th>User Account:</th><td>{{ client.user|user_nice }}</td></tr>
+<tr><th>Location:</th><td>{{ client.location }}</td></tr>
+{{ form }}
+<tr class="form_footer"><td colspan="2"><input type="submit" value="Save"></td></tr>
+</table>
+</form>
+{% else %}
+<div style="float:right;width:500px;">{{ contentA|safe }}</div>
+<h1>Client: {{ client }}</h1>
+{% endif %}
+
+{% if administrations %}
+<h2>{{ administrations|length }} Administration{{ administrations|length|pluralize }}:</h2>
+<table class="grid">
+<tr class="headfoot">{#<th></th>#}<th>Date</th><th>CNMB Definition</th><th>Score</th></tr>
+{% for a in administrations %}
+<tr>
+	{#<td><a href="{% url 'cnmb:admin' a.id %}">View</a></td>#}
+	<td><a href="{% url 'cnmb:admin' a.id %}">{{ a.date_given }}</a></td>
+	<td>{{ a.definition }}</td>
+	<td class="r">{{ a.total_score }}</td>
+</tr>
+{% endfor %}
+</table>
+<p><a href="{% url 'cnmb:client_chart' client.id %}">View Complete Chart</a></p>
+<p><a href="{% url 'cnmb:client_media' client.id %}">View All Media</a></p>
+{% endif %}
+
+{% if user|is_client %}
+<div>{{ contentB|safe }}</div>
+{% endif %}
+
+{% endblock %}

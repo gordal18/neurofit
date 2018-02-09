@@ -1,0 +1,49 @@
+{% extends "cnmb/base.html" %}
+{% load cnmb_extras %}
+
+{% block title %}Media: {{ client }} - {% endblock %}
+
+{% block body %}
+
+{% if user|is_client %}
+<div style="float:right;width:500px;">{{ contentA|safe }}</div>
+{% endif %}
+
+<p><a href="{% url 'cnmb:client' client.id %}">&lt; Back to Client Info</a></p>
+<h2>CNMB Media: {{ client }}</h2>
+
+<table class="grid">
+<tr class="headfoot">
+{% for a in administrations %}
+	<th>{{a.administration.date_given}}</th>
+{% endfor %}
+</tr>
+<tr>
+{% for a in administrations %}
+	<td>
+	{% for s, items in a.sections.items %}
+		<strong>{{s.title}}</strong><ul>
+		{% for item, media in items.items %}
+			<li>{{item.name}}<br>
+			{% for m in media %}
+				<a href="{{m.media_file.url}}" target="_blank">{{m.filename}}</a><br>
+			{% endfor %}
+			</li>
+		{% endfor %}
+		</ul>
+	{% endfor %}
+	</td>
+{% endfor %}
+</tr>
+</table>
+
+{% if not administrations %}
+<p>No media has been uploaded for this client.</p>
+{% endif %}
+
+{% if user|is_client %}
+&nbsp;
+<div>{{ contentB|safe }}</div>
+{% endif %}
+
+{% endblock %}

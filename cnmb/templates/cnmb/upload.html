@@ -1,0 +1,35 @@
+{% extends "cnmb/base.html" %}
+
+{% block title %}Upload - {% endblock %}
+
+{% block header %}{% endblock %}{# no header #}
+
+{% block body %}
+
+<h1>Client: {{ admin.client }}</h1>
+<h2>Section {{ item.section.number }}: {{ item.section.title }}</h2>
+<h3>Item {{ item.number }}: {{ item.name }}</h3>
+
+<form enctype="multipart/form-data" method="post" action="">
+{% csrf_token %}
+
+{{ form.non_field_errors }}
+{% if saved %}<p class="msg">Your file was successfully uploaded.</p>{% endif %}
+<table>
+{{ form }}
+</table>
+
+<p><input type="submit" name="submit" value="Upload"></p>
+</form>
+
+<hr>
+
+<table class="grid">
+{% for m in media %}
+<tr><td>
+  <a href="{{ m.media_file.url }}" target="_blank">{{ m.filename }}</a>
+</td></tr>
+{% endfor %}
+</table>
+
+{% endblock %}

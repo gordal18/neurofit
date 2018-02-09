@@ -1,0 +1,77 @@
+{% extends "cnmb/base.html" %}
+{% load staticfiles %}
+
+{% block title %}[{{ section.number }}] {{ section.title }} - {% endblock %}
+
+{% block subheader %}
+
+<table id="section_links"><tr class="links">
+{% for s in sections %}
+<td>
+{% if s.number == section.number %}
+    <a href="" class="sel">{{ s.title }}</a>
+{% else %}
+    <a href="{% url 'cnmb:section' admin.id s.number %}">{{ s.title }}</a>
+{% endif %}
+</td>
+{% endfor %}
+</tr></table>
+
+{% endblock %}
+
+{% block body %}
+
+<table class="form rfloat">
+<tr><th>Client:</th><td><a href="{% url 'cnmb:client' admin.client.id %}">{{ admin.client }}</a></td></tr>
+<tr><th>Started:</th><td>{{ admin.date_given }}</td></tr>
+<tr><td colspan="2"><a href="{% url 'cnmb:admin' admin.id %}">View Summary</a></td></tr>
+</table>
+
+<h1>CNMB Administration</h1>
+<h2>Section {{ section.number }}: {{ section.title }}</h2>
+
+<form method="post" action="" class="clear">
+{% csrf_token %}
+
+<table class="items">
+{% for item in items %}
+
+<tr><th colspan="2"><em>{{ item.number }}: {{ item.name }}</em></th></tr>
+<tr>
+<td class="desc">
+  {{ item.description }}
+
+  <div style="border-top:1px solid #ccc; margin-top:1em;">
+    <div style="float:right;"><a href="{% url 'cnmb:upload' admin.id item.id %}" target="_blank"><img src="{% static 'admin/img/icon_addlink.gif' %}" alt="+"> Upload media</a></div>
+  {% for m in item.admin_media %}
+  <a href="{{ m.media_file.url }}" target="_blank">{{ m.filename }}</a><br>
+  {% endfor %}
+  {# <input type="file" name="item-{{ item.id }}-media"> #}
+  </div>
+</td>
+<td>
+<ol class="scores">
+{% for score in item.score_set.all %}
+    <li>
+    <input type="radio" name="item-{{ item.id }}" id="item-{{ item.id }}-score-{{ score.score }}" value="{{ score.score }}" {% if score in item.sel_scores %}checked{% endif %}>
+    <label for="item-{{ item.id }}-score-{{ score.score }}">
+    <table><tr><th>{{ score.score }}</th><td>{{ score.description }}</td></tr></table>
+    </label>
+    </li>
+{% endfor %}
+    <li>
+    <input type="radio" name="item-{{ item.id }}" id="item-{{ item.id }}-noscore" value="" {% if not item.sel_scores %}checked{% endif %}>
+    <label for="item-{{ item.id }}-noscore">No score</label>
+    </li>
+</ol>
+</td>
+</tr>
+
+{% endfor %}
+</table>
+
+<hr>
+<input type="submit" value="Save and Continue">
+</form>
+
+{% endblock %}

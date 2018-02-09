@@ -1,0 +1,26 @@
+{% extends "cnmb/base.html" %}
+
+{% block title %}Home - {% endblock %}
+
+{% block body %}
+
+{% comment %}
+<h1>CNMB Home</h1>
+<p><a href="{% url 'cnmb:start' %}">Start a new CNMB administration</a></p>
+<p><a href="{% url 'cnmb:admins' %}">View all CNMB administrations</a></p>
+<p><a href="{% url 'cnmb:clients' %}">View all clients</a></p>
+{% endcomment %}
+
+<h2>Your recent CNMB administrations</h2>
+{% if recents_list %}
+<ul>
+{% for admin in recents_list %}
+    <li><a href="{% url 'cnmb:admin' admin.id %}">{{ admin.client }} on {{ admin.date_given }}</a>
+    {# (<a href="{% url 'cnmb:client' admin.client.id %}">client</a>) #}</li>
+{% endfor %}
+</ul>
+{% else %}
+<p>You haven't administered any CNMBs.</p>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load staticfiles %}
+{% load cnmb_extras %}
+<head>
+<meta charset="utf-8">
+<title>{% block title %}{% endblock %}CNMB</title>
+<link rel="stylesheet" href="{% static 'cnmb/css/base.css' %}">
+{% block head %}{% endblock %}
+</head>
+<body>
+<div id="header">
+{% block header %}
+<div id="header_user">
+{% if user.is_authenticated %}
+Logged in as <em>{{ user }}</em> (<a href="{% url 'logout' %}">logout</a>)
+<br>(<a href="{% url 'password_change' %}">change password</a>)
+{% else %}
+<a href="{% url 'cnmb:home' %}">Login</a>
+{% endif %}
+</div>
+<table><tr>
+<td><a href="http://www.neuro-fit.com/" target="_blank"><img src="{% static "images/neurofit_sm.png" %}" alt="Neuro-fit" width="220" height="50"></a></td>
+{% if user.is_authenticated %}
+    <td><a href="{% url 'cnmb:home' %}">Home</a></td>
+  {% if user|is_trainer %}
+    <td><a href="{% url 'cnmb:clients' %}">Clients</a></td>
+    {# <td><a href="{% url 'cnmb:admins' %}">CNMBs</a></td> #}
+    <td><a href="{% url 'cnmb:trainers' %}">Trainers</a></td>
+    <td><a href="{% url 'cnmb:start' %}">Start New CNMB</a></td>
+    {% if user.is_staff %}
+    <td><a href="{% url 'admin:index' %}">Site Admin</a></td>
+    {% endif %}
+  {% elif user|is_client %}
+    <td><a href="{% url 'cnmb:questions' %}">Questions?</a></td>
+  {% endif %}
+
+  {# Custom pages #}
+  {% get_nav_custom_pages user as nav_pages %}
+  {% for page in nav_pages %}
+    <td><a href="{% url 'cnmb:custom_page' page.slug %}">{{ page.title }}</a></td>
+  {% endfor %}
+
+{% else %}
+    <td><a href="{% url 'cnmb:home' %}">Login</a></td>
+{% endif %}
+</tr></table>
+{% endblock %}
+</div>
+{% block subheader %}{% endblock %}
+<div id="content">
+{% block body %}{% endblock %}
+</div>
+</body>
+</html>

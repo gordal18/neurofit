@@ -1,0 +1,36 @@
+{% extends "cnmb/base.html" %}
+
+{% block title %}Clients - {% endblock %}
+
+{% block body %}
+
+<h1>Clients</h1>
+
+{% for location in locations %}
+	<h2>{{location.name}}</h2>
+	<table class="grid">
+	<tr class="headfoot"><th>First Name</th><th>Last Name</th></tr>
+	{% for c in location.clients %}
+	<tr>
+		<td><a href="{% url 'cnmb:client' c.id %}">{{c.first_name}}</a></td>
+		<td><a href="{% url 'cnmb:client' c.id %}">{{c.last_name}}</a></td>
+	</tr>
+	{% endfor %}
+	</table>
+{% endfor %}
+
+{# OLD: List all clients from every location #}
+{% comment %}
+<table class="grid">
+<tr class="headfoot"><th>First Name</th><th>Last Name</th><th>Location</th></tr>
+{% for c in clients %}
+<tr>
+	<td><a href="{% url 'cnmb:client' c.id %}">{{c.first_name}}</a></td>
+	<td><a href="{% url 'cnmb:client' c.id %}">{{c.last_name}}</a></td>
+	<td>{{c.location}}</td>
+</tr>
+{% endfor %}
+</table>
+{% endcomment %}
+
+{% endblock %}

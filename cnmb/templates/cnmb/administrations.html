@@ -1,0 +1,19 @@
+{% extends "cnmb/base.html" %}
+
+{% block title %}Administrations - {% endblock %}
+
+{% block body %}
+
+<h1>CNMB Administrations</h1>
+
+{% if administrations %}
+<ul>
+{% for admin in administrations %}
+    <li><a href="{% url 'cnmb:admin' admin.id %}">{{ admin.client }} on {{ admin.date_given }}</a></li>
+{% endfor %}
+</ul>
+{% else %}
+<p>There are no CNMB administrations yet.</p>
+{% endif %}
+
+{% endblock %}
