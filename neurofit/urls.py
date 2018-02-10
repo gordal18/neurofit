@@ -8,7 +8,7 @@ from django.conf.urls.static import static
 
 admin_site.site_header = 'Neuro-fit Admin'
 admin_site.site_title = 'Neuro-fit Admin'
-admin_site.site_url = 'https://www.kcmaconsultants.com/'#' + Site.objects.get_current().domain
+admin_site.site_url = 'http://138.68.244.70/'#' + Site.objects.get_current().domain
 admin_site.index_title = ''
 
 def auth_url(name, extra_path=''):
