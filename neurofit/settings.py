@@ -33,7 +33,7 @@ CSRF_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SECURE = True
 # Redirect all HTTP to HTTPS (shouldn't be needed, Apache handles it)
 SECURE_SSL_REDIRECT = True
-X_FRAME_OPTIONS = 'ALLOW-FROM http://neuro-fit.com/' # default SAMEORIGIN
+X_FRAME_OPTIONS = 'ALLOW-FROM https://neuro-fit.com/' # default SAMEORIGIN
 
 
 # DB id of current Site
