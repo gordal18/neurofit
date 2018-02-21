@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os, sys
+import raven
 #from django.conf.global_settings import DEFAULT_FROM_EMAIL
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -33,7 +34,7 @@ CSRF_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SECURE = True
 # Redirect all HTTP to HTTPS (shouldn't be needed, Apache handles it)
 SECURE_SSL_REDIRECT = True
-X_FRAME_OPTIONS = 'ALLOW-FROM https://neuro-fit.com/' # default SAMEORIGIN
+X_FRAME_OPTIONS = 'ALLOWALL' # default SAMEORIGIN
 
 
 # DB id of current Site
@@ -54,6 +55,7 @@ INSTALLED_APPS = (
 	'django.contrib.staticfiles',
 	'people',
 	'cnmb',
+	'raven.contrib.django.raven_compat',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -150,12 +152,16 @@ LOGOUT_URL = '/auth/logout/'
 
 
 # Email settings
-DEFAULT_FROM_EMAIL = 'info@kcmaconsultants.com'
+DEFAULT_FROM_EMAIL = 'postmaster@support.neuro-fit.com'
 ADMINS = (
-	('Admin', 'info@kcmaconsultants.com'),
+	('Admin', 'postmaster@support.neuro-fit.com'),
 )
 EMAIL_SUBJECT_PREFIX = '[Neuro-fit site] '
-EMAIL_HOST = 'localhost'
+EMAIL_HOST = 'smtp.mailgun.org'
+EMAIL_DOMAIN = "support.neuro-fit.com"
+EMAIL_API = "key-c2bb00ea011ddd59c076ea458bc413e2"
+EMAIL_SUPPORT = "postmaster@support.neuro-fit.com"
+EMAIL_PORT = "587"
 
 
 # Logging
@@ -205,6 +211,16 @@ CKEDITOR_CONFIGS = {
 		['TextColor', 'BGColor'],
 	],
 }
+}
+
+# raven
+
+
+RAVEN_CONFIG = {
+    'dsn': 'https://95660c57fb734889a4fb067b497b1cd5:4ad67bed02184c43b84ea2cb69098f9e@sentry.io/291707',
+    # If you are using git, you can also automatically configure the
+    # release based on the git info.
+    'release': raven.fetch_git_sha(os.path.abspath(os.curdir)),
 }
 
 try:
